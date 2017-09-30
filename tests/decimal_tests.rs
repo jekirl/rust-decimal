@@ -1,10 +1,10 @@
 extern crate num;
 extern crate rust_decimal;
 
+use num::{ToPrimitive, FromPrimitive};
 use num::Zero;
 use rust_decimal::Decimal;
 use std::str::FromStr;
-use num::ToPrimitive;
 
 // Parsing
 
@@ -39,6 +39,13 @@ fn it_parses_positive_float_string() {
     assert_eq!(a.is_negative(), false);
     assert_eq!(a.scale(), 6);
     assert_eq!("233.323223", a.to_string());
+}
+#[test]
+fn it_parses_positive_float_float() {
+    let a = Decimal::from_f64(233.323223123).unwrap();
+    assert_eq!(a.is_negative(), false);
+    assert_eq!(a.scale(), 9);
+    assert_eq!("233.323223123", a.to_string());
 }
 
 #[test]
@@ -653,18 +660,14 @@ fn it_can_round_simple_numbers_up() {
 
 #[test]
 fn it_can_return_the_max_value() {
-    assert_eq!(
-        "79228162514264337593543950335",
-        Decimal::max_value().to_string()
-    );
+    assert_eq!("79228162514264337593543950335",
+               Decimal::max_value().to_string());
 }
 
 #[test]
 fn it_can_return_the_min_value() {
-    assert_eq!(
-        "-79228162514264337593543950335",
-        Decimal::min_value().to_string()
-    );
+    assert_eq!("-79228162514264337593543950335",
+               Decimal::min_value().to_string());
 }
 
 #[test]
@@ -694,6 +697,8 @@ fn it_converts_to_f64() {
     assert_eq!(5f64, Decimal::from_str("5").unwrap().to_f64().unwrap());
     assert_eq!(-5f64, Decimal::from_str("-5").unwrap().to_f64().unwrap());
     assert_eq!(0.1f64, Decimal::from_str("0.1").unwrap().to_f64().unwrap());
-    assert_eq!(0.25e-11f64, Decimal::from_str("0.0000000000025").unwrap().to_f64().unwrap());
-    assert_eq!(1e6f64, Decimal::from_str("1000000.0000000000025").unwrap().to_f64().unwrap());
+    assert_eq!(0.25e-11f64,
+               Decimal::from_str("0.0000000000025").unwrap().to_f64().unwrap());
+    assert_eq!(1e6f64,
+               Decimal::from_str("1000000.0000000000025").unwrap().to_f64().unwrap());
 }

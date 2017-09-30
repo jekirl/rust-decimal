@@ -615,6 +615,20 @@ impl FromPrimitive for Decimal {
             hi: 0,
         })
     }
+    // can lose precision
+    fn from_f32(n: f32) -> Option<Decimal> {
+        match n.to_string().parse::<Decimal>() {
+            Ok(s) => Some(s),
+            Err(_) => None
+        }
+    }
+    // can lose precision
+    fn from_f64(n: f64) -> Option<Decimal> {
+        match n.to_string().parse::<Decimal>() {
+            Ok(s) => Some(s),
+            Err(_) => None
+        }
+    }
 
     fn from_u32(n: u32) -> Option<Decimal> {
         Some(Decimal {
@@ -646,7 +660,7 @@ impl ToPrimitive for Decimal {
             } else {
                 sign = Plus;
             }
-            
+
             BigInt::from_bytes_le(sign, &bytes[..]).to_f64()
         } else {
             match self.to_string().parse::<f64>() {
