@@ -29,4 +29,4 @@ serde_derive = "1.0"
 bincode = "0.8"
 
 [features]
-default = ["postgres","serde"]
+default = ["serde"]
