@@ -65,7 +65,7 @@ static BIG_POWERS_10: [u64; 10] = [
 /// The finite set of values of type `Decimal` are of the form m / 10^e,
 /// where m is an integer such that -2^96 <= m <= 2^96, and e is an integer
 /// between 0 and 28 inclusive.
-#[derive(Clone, Debug, Copy)]
+#[derive(Clone, Debug, Copy, Serialize, Deserialize)]
 pub struct Decimal {
     // Bits 0-15: unused
     // Bits 16-23: Contains "e", a value between 0-28 that indicates the scale
@@ -615,14 +615,14 @@ impl FromPrimitive for Decimal {
             hi: 0,
         })
     }
-    // can lose precision
+
     fn from_f32(n: f32) -> Option<Decimal> {
         match n.to_string().parse::<Decimal>() {
             Ok(s) => Some(s),
             Err(_) => None
         }
     }
-    // can lose precision
+    /// can lose precision
     fn from_f64(n: f64) -> Option<Decimal> {
         match n.to_string().parse::<Decimal>() {
             Ok(s) => Some(s),
@@ -1067,7 +1067,7 @@ mod test {
     // Tests on private methods.
     //
     // All public tests should go under `tests/`.
-
+    extern crate test;
     use super::*;
     #[test]
     fn rescale_integer_up() {
@@ -1142,5 +1142,32 @@ mod test {
         };
         let b = a.round_dp(2u32);
         assert_eq!("1982.27", b.to_string());
+    }
+    #[bench]
+    fn bench_from_i32(b: &mut test::Bencher) {
+        b.iter(|| {
+            for i in 0..1000 {
+                let x = (i as i32) * 15;
+               test::black_box(Decimal::from_i32(x));
+            }
+        })
+    }
+    #[bench]
+    fn bench_from_f32(b: &mut test::Bencher) {
+        b.iter(|| {
+            for i in 0..1000 {
+                let x = (i as f32) * 1.515;
+               test::black_box(Decimal::from_f32(x));
+            }
+        })
+    }
+    #[bench]
+    fn bench_from_f64(b: &mut test::Bencher) {
+        b.iter(|| {
+            for i in 0..1000 {
+                let x = (i as f64) * 1.515;
+               test::black_box(Decimal::from_f64(x));
+            }
+        })
     }
 }

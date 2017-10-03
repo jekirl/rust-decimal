@@ -1,3 +1,4 @@
+#![feature(test)]
 extern crate num;
 #[macro_use]
 extern crate lazy_static;
@@ -6,13 +7,7 @@ extern crate lazy_static;
 #[macro_use]
 extern crate postgres as pg_crate;
 
-#[cfg(feature = "serde")]
 extern crate serde;
-#[cfg(feature = "serde")]
-#[cfg(test)]
-extern crate serde_json;
-#[cfg(feature = "serde")]
-#[cfg(test)]
 #[macro_use]
 extern crate serde_derive;
 

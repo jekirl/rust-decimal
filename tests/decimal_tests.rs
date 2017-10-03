@@ -41,7 +41,14 @@ fn it_parses_positive_float_string() {
     assert_eq!("233.323223", a.to_string());
 }
 #[test]
-fn it_parses_positive_float_float() {
+fn it_parses_positive_float32_float() {
+    let a = Decimal::from_f32(233.3232_f32).unwrap();
+    assert_eq!(a.is_negative(), false);
+    assert_eq!("233.3232", a.round_dp(4).to_string());
+    assert_eq!(a.scale(), 5);
+}
+#[test]
+fn it_parses_positive_float64_float() {
     let a = Decimal::from_f64(233.323223123).unwrap();
     assert_eq!(a.is_negative(), false);
     assert_eq!(a.scale(), 9);
